@@ -154,11 +154,9 @@ namespace DocumentDB.AspNet.Identity
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            var doc = client.CreateDocumentQuery(usersLink)
-                .Where(u => u.Id == user.Id).FirstOrDefault();
-
+        	var query = String.Format("SELECT * FROM Users u WHERE u.id = '{0}'", user.Id);
+			Document doc = Client.CreateDocumentQuery<Document>(SelfLink, query).AsEnumerable().FirstOrDefault();
             await client.DeleteDocumentAsync(doc.SelfLink);
-
         }
 
         public async Task<TUser> FindByIdAsync(string userId)
